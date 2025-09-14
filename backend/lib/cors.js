@@ -1,16 +1,20 @@
-// lib/cors.js
+export function enableCors(req, res) {
+  const allowedOrigins = [
+    "http://localhost:5173", // local dev
+    "https://yard-stick-assessment-qh7f.vercel.app", // frontend on Vercel
+  ];
 
-export function enableCors(req,res) {
-  // Use an environment variable for the client origin
-  res.setHeader("Access-Control-Allow-Origin", process.env.CLIENT_ORIGIN || "http://localhost:5173");
+  const origin = req.headers.origin;
+  if (allowedOrigins.includes(origin)) {
+    res.setHeader("Access-Control-Allow-Origin", origin);
+  }
+
   res.setHeader("Access-Control-Allow-Methods", "GET,POST,PUT,DELETE,OPTIONS");
   res.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization");
 
-  // Handle the preflight request
   if (req.method === "OPTIONS") {
     res.status(200).end();
-    return true; // Indicates the request was handled
+    return true;
   }
-
-  return false; // Indicates the request was not handled
+  return false;
 }
